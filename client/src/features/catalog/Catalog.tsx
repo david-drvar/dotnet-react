@@ -1,18 +1,21 @@
 import { Avatar, Button, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Product } from "../../app/models/product";
 import ProductList from "./ProductList";
 
-interface Props {
-    products: Product[];
-    addProduct: ()=> void;
-}
 
-export default function Catalog({products, addProduct}: Props) {
+export default function Catalog() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+      fetch('https://localhost:5001/api/products').then(response => response.json()).then(data => setProducts(data))
+    }, [])
+  
+
+  
     return (
         <>
             <ProductList products={products} />
-            <Button variant="contained" onClick={addProduct}>Add product</Button>
         </>
     )
 }
