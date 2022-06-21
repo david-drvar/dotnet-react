@@ -5,7 +5,10 @@ import { history } from "../..";
 axios.defaults.baseURL = 'https://localhost:5001/api/';
 const responseBody = (response: AxiosResponse) => response.data;
 
-axios.interceptors.response.use(response => {
+const sleep = () => new Promise(resolve => setTimeout(resolve, 100));
+
+axios.interceptors.response.use( async response => {
+    await sleep();
     return response;
 }, (error: AxiosError) => {
     //console.log('caught by inteceptor');
