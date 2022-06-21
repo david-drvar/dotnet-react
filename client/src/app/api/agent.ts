@@ -1,4 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
+import { history } from "../..";
 
 axios.defaults.baseURL = 'https://localhost:5001/api/';
 const responseBody = (response: AxiosResponse) => response.data;
@@ -6,7 +8,28 @@ const responseBody = (response: AxiosResponse) => response.data;
 axios.interceptors.response.use(response => {
     return response;
 }, (error: AxiosError) => {
-    console.log('caught by inteceptor');
+    //console.log('caught by inteceptor');
+    // console.log(error.response);
+    //console.log(error.response!.data);
+    const { data, status } = error.response!;
+    switch (status) {
+        case 400:
+            toast.error(status);
+            break;
+        case 401:
+            toast.error(status);
+            break;
+        case 404:
+            //toast.error(status);
+            //history.push('/not-found-error');
+            break;
+        case 500:
+            //toast.error(status);
+            history.push('/server-error', { state: error.response!.data });
+            break;
+        default:
+            break;
+    }
     return Promise.reject(error.response);
 });
 
@@ -24,7 +47,7 @@ const requests = {
 
 const Catalog = {
     list: () => requests.get('products'),
-    details: (id: number) => requests.get(`products/${id}`) 
+    details: (id: number) => requests.get(`products/${id}`)
 }
 
 const TestErrors = {

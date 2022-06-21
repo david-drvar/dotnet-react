@@ -21,10 +21,9 @@ export default function ProductCard({ product }: Props) {
                 />
 
             <CardMedia
-                component="img"
                 image={product.pictureUrl}
                 title={product.name}
-                sx={{height: 140,backgroundSize: 'contain', bgcolor: 'primary.light'}}
+                sx={{height: 140, backgroundSize: 'contain', bgcolor: 'primary.light'}}
             />
             <CardContent>
                 <Typography gutterBottom color='secondary' variant="h5">
@@ -35,7 +34,11 @@ export default function ProductCard({ product }: Props) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Add to cart</Button>
+                <Button size="small">
+                    {/* Add to cart */}
+                    <Link to="/">Home</Link>
+
+                    </Button>
                 <Button size="small" component={Link} to={`/catalog/${product.id}`}>View</Button>
             </CardActions>
         </Card>
