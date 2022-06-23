@@ -20,10 +20,8 @@ root.render(
     <HistoryRouter history={history}>
       <StoreProvider>
         <App />
-
       </StoreProvider>
     </HistoryRouter >
-
   </React.StrictMode>
 );
 
