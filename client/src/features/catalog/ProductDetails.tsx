@@ -1,6 +1,5 @@
 import { LoadingButton } from "@mui/lab";
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
@@ -52,7 +51,7 @@ export default function ProductDetails() {
             setLoadingSubmit(false);
             return;
         }
-        else if (item?.quantity == 0) { //if quantity is 0 then the user wants to remove the item from the basket so the full item quantity is sent
+        else if (item?.quantity === 0) { //if quantity is 0 then the user wants to remove the item from the basket so the full item quantity is sent
             agent.Basket.removeItem(product?.id!, ogBasketItem.quantity).then(() => removeItem(product?.id!, ogBasketItem.quantity)).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
         }
         else {

@@ -10,7 +10,7 @@ export default function ServerError() {
 
     useEffect(() => {
         setOutput(history.location.state.state.detail);
-        console.log(output)
+        //console.log(output)
     }, [])
 
     return (

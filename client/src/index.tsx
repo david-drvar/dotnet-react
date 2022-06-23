@@ -1,11 +1,13 @@
+import { createBrowserHistory } from "history";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './app/layout/styles.css';
-import App from './app/layout/App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-import { createBrowserHistory } from "history";
 import { StoreProvider } from './app/context/StoreContext';
+import App from './app/layout/App';
+import './app/layout/styles.css';
+import { store } from "./app/store/configureStore";
+import reportWebVitals from './reportWebVitals';
 
 
 const root = ReactDOM.createRoot(
@@ -13,13 +15,16 @@ const root = ReactDOM.createRoot(
 );
 
 export const history = createBrowserHistory({ window });
+// const store = configureStore();
 
 
 root.render(
   <React.StrictMode>
     <HistoryRouter history={history}>
       <StoreProvider>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </StoreProvider>
     </HistoryRouter >
   </React.StrictMode>
