@@ -1,7 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, FormGroup, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 interface Props {
     switchTheme: () => void;
@@ -19,7 +19,7 @@ const rightLinks = [
 const navStyles = { color: 'inherit', typography: 'h6', '&:hover': { color: 'secondary.main' }, '&.active': { color: 'text.secondary' }, textDecoration: 'none' }
 
 export default function Header({ switchTheme }: Props) {
-    const {basket} = useStoreContext();
+    const {basket} = useAppSelector(state => state.basket);
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (

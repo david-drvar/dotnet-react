@@ -6,27 +6,28 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import About from "../../features/about/About";
 import BasketPage from "../../features/basket/BasketPage";
+import { setBasket } from "../../features/basket/basketSlice";
 import Catalog from "../../features/catalog/Catalog";
 import ProductDetails from "../../features/catalog/ProductDetails";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
 import Contact from "../../features/contact/Contact";
 import Home from "../../features/home/Home";
 import agent from "../api/agent";
-import { useStoreContext } from "../context/StoreContext";
 import NotFound from "../errors/NotFound";
 import ServerError from "../errors/ServerError";
+import { useAppDispatch } from "../store/configureStore";
 import { getCookie } from "../util/util";
 import Header from "./Header";
 import LoadingComponent from "./LoadingComponent";
 
 function App() {
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const buyerId = getCookie('buyerId');
     if (buyerId) {
-      agent.Basket.getBasket().then(basket => setBasket(basket)).catch(error => console.log(error)).finally(() => setLoading(false));
+      agent.Basket.getBasket().then(basket => dispatch(setBasket(basket))).catch(error => console.log(error)).finally(() => setLoading(false));
     }
     else {
       setLoading(false);

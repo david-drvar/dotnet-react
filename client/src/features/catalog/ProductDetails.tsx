@@ -4,19 +4,21 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { BasketItem } from "../../app/models/Basket";
 import { Product } from "../../app/models/product";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { currencyFormat } from "../../app/util/util";
+import { removeItem, setBasket } from "../basket/basketSlice";
 
 export default function ProductDetails() {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [loadingSubmit, setLoadingSubmit] = useState(false);
-    const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket } = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch();
     const [item, setItem] = useState<BasketItem>();
     //quantity ??
 
@@ -45,17 +47,17 @@ export default function ProductDetails() {
             return;
         }
         else if (ogBasketItem === undefined || item?.quantity > ogBasketItem.quantity) { //if there is not item in the basket or there is and the quantity is greater
-            agent.Basket.addItem(product?.id!, item?.quantity).then((basket) => setBasket(basket)).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
+            agent.Basket.addItem(product?.id!, item?.quantity).then((basket) => dispatch(setBasket(basket))).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
         }
         else if (item?.quantity === ogBasketItem.quantity) { //if the quantity remained the same
             setLoadingSubmit(false);
             return;
         }
         else if (item?.quantity === 0) { //if quantity is 0 then the user wants to remove the item from the basket so the full item quantity is sent
-            agent.Basket.removeItem(product?.id!, ogBasketItem.quantity).then(() => removeItem(product?.id!, ogBasketItem.quantity)).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
+            agent.Basket.removeItem(product?.id!, ogBasketItem.quantity).then(() => dispatch(removeItem({productId: product?.id!,quantity: ogBasketItem.quantity}))).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
         }
         else {
-            agent.Basket.removeItem(product?.id!, item?.quantity).then(() => removeItem(product?.id!, item?.quantity)).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
+            agent.Basket.removeItem(product?.id!, item?.quantity).then(() => dispatch(removeItem({productId: product?.id!,quantity: item?.quantity}))).then(() => toast.success("Success")).catch(err => console.log(err)).finally(() => setLoadingSubmit(false));
         }
     }
 

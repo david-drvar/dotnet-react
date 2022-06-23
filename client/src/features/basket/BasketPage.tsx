@@ -5,12 +5,14 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { currencyFormat } from "../../app/util/util";
+import { removeItem, setBasket } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
-  const { basket, setBasket, removeItem } = useStoreContext();
+  const { basket } = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
   const [status, setStatus] = useState({
     name: '',
     loading: false
@@ -21,7 +23,7 @@ export default function BasketPage() {
       loading: true,
       name
     });
-    agent.Basket.addItem(productId).then(basket => setBasket(basket)).catch(err => console.log(err)).finally(() => setStatus({ loading: false, name: '' }));
+    agent.Basket.addItem(productId).then(basket => dispatch(setBasket(basket))).catch(err => console.log(err)).finally(() => setStatus({ loading: false, name: '' }));
   }
 
   function handleRemoveItem(productId: number, quantity: number, name: string) {
@@ -29,7 +31,7 @@ export default function BasketPage() {
       loading: true,
       name
     });
-    agent.Basket.removeItem(productId, quantity).then(() => removeItem(productId, quantity)).catch(err => console.log(err)).finally(() => setStatus({ loading: false, name: '' }));
+    agent.Basket.removeItem(productId, quantity).then(() => dispatch(removeItem({productId, quantity}))).catch(err => console.log(err)).finally(() => setStatus({ loading: false, name: '' }));
   }
 
   if (!basket) return <Typography variant="h3">Your basket is empty</Typography>
